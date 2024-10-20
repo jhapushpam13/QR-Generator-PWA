@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="manifest" href="manifest.json"> <!-- Add manifest file for PWA -->
+    <link rel="icon" href="./ss/iconsmall.png" sizes="192x192"> <!-- Icon for PWA -->
+    <link rel="icon" href="./ss/iconlarge.png" sizes="512x512"> <!-- Icon for PWA -->
+    <script src="./libs/qrcode.min.js"></script>
+    <script src="./libs/jsQR.js"></script>
+    <script src="./service-worker.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QR Code Generator</h1>
+            <hr />
+        </div>
+        <div class="input-box">
+            <input type="text" id="qr-input" placeholder="Enter text or URL" onkeydown="if(event.key === 'Enter') generateQr()" />
+            <button id="generate-btn" onclick="generateQr()">Generate QR</button>
+            <button id="clear-btn" onclick="clearQr()">Clear</button>
+        </div>
+        <div class="qrcode-box">
+            <div class="qrcode"></div>
+        </div>
+        <div class="actions">
+            <button id="download-btn" onclick="downloadQr()">Download QR</button>
+            <input type="file" id="upload-file" accept="image/*" onchange="decodeQr(this)">
+            <label for="upload-file">Upload & Decode</label>
+        </div>
+        <div class="container">
+            <button id="scanButton">SCAN QR</button>
+    
+            <!-- QR Scanner UI (Initially hidden) -->
+            <div id="scanner" style="display: none;">
+                <video id="video" autoplay></video>
+                <canvas id="canvas"></canvas>
+                <div id="result">Waiting for QR code...</div>
+                <button id="cancelButton">CANCEL SCANNING</button>
+            </div>
+        </div>   
+    </div>
+    <script src="./script.js"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js').then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
